@@ -85,7 +85,7 @@ namespace TicTacToe
                         }
                         else
                         {
-                            EasyBotTurn(); // Use easy AI
+                            EasyBotTurn(); // Use Easy AI
                         }
                         isHumanTurn = true;
                     }
