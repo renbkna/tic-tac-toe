@@ -79,7 +79,6 @@ namespace TicTacToe
                     else
                     {
                         Console.WriteLine("\nComputer is thinking...");
-                        Thread.Sleep(500);
                         if (useMinimax)
                         {
                             AITurn(); // Use Minimax for AI
