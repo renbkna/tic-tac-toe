@@ -9,19 +9,23 @@ namespace TicTacToe
         static int cursorX = 0;
         static int cursorY = 0;
 
-        // Symbols for players ( ssigned dynamically)
+        // Symbols for players (assigned dynamically)
         static char HUMAN;
         static char AI;
         const char EMPTY = ' ';
 
-        // Track if the player chose to go first or second
+        // Check if the player chose to go first or second
         static bool playerChoseFirst;
+
+        // Track game mode: true for minimax AI, false for Easy AI
+        static bool useMinimax;
 
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
 
-            // Ask the player if they want to go first or second
+            // Ask the player to choose game mode and first/second turn
+            useMinimax = AskGameMode();
             playerChoseFirst = AskInitialTurnOrder();
 
             while (true)
@@ -29,7 +33,7 @@ namespace TicTacToe
                 Console.Clear();
                 InitializeBoard();
 
-                // Determine who goes first
+                // Determine who goes first and assign symbols
                 bool isHumanTurn;
                 if (playerChoseFirst)
                 {
@@ -75,8 +79,15 @@ namespace TicTacToe
                     else
                     {
                         Console.WriteLine("\nComputer is thinking...");
-                        Thread.Sleep(1000);
-                        AITurn();
+                        Thread.Sleep(500);
+                        if (useMinimax)
+                        {
+                            AITurn(); // Use Minimax for AI
+                        }
+                        else
+                        {
+                            EasyBotTurn(); // Use easy AI
+                        }
                         isHumanTurn = true;
                     }
                 }
@@ -86,6 +97,16 @@ namespace TicTacToe
                 if (key.KeyChar != 'r' && key.KeyChar != 'R')
                     break; // Exit the game loop if the player does not press 'R'
             }
+        }
+
+        // Ask the player to choose the game mode (Minimax or Easy AI)
+        static bool AskGameMode()
+        {
+            Console.WriteLine("Choose game mode: (1) Minimax AI (Optimal) or (2) Easy AI (First Available Move)");
+            char choice = Console.ReadKey().KeyChar;
+            Console.Clear();
+
+            return choice == '1';
         }
 
         // Ask the player if they want to go first or second
@@ -214,6 +235,22 @@ namespace TicTacToe
             // Make the best move
             if (moveX != -1 && moveY != -1)
                 board[moveY, moveX] = AI;
+        }
+
+        // AI's turn for Easy Bot (chooses the first available move)
+        static void EasyBotTurn()
+        {
+            for (int y = 0; y < 3; y++)
+            {
+                for (int x = 0; x < 3; x++)
+                {
+                    if (board[y, x] == EMPTY)
+                    {
+                        board[y, x] = AI;
+                        return;
+                    }
+                }
+            }
         }
 
         // Minimax algorithm to calculate the best move
